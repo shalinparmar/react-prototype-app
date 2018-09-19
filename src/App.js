@@ -7,19 +7,19 @@ let fakeServerData = {
     playlists: [
       {
         name: 'Prabhatiya',
-        songs: [{ name: 'Dhyan Dhar', duration: 400}, {name: 'Jago Mohan Pyara', duration: 460}, {name: 'Prit Kar', duration: 560}]
+        songs: [{ name: 'Dhyan Dhar', duration: 800}, {name: 'Jago Mohan Pyara', duration: 680}, {name: 'Prit Kar', duration: 760}]
       },
       {
         name: 'Sandhya Aarti',
-        songs: [{name: 'Jai Sadguru Swami', duration: 200}, {name: 'Ram Krishna Govind', duration: 220}, {name: 'Anant Kotindu', duration: 310}, {name: 'Nirvikalp Uttam Ati', duration: 175}, {name: 'Krupa Karo', duration: 320}]
+        songs: [{name: 'Jai Sadguru Swami', duration: 300}, {name: 'Ram Krishna Govind', duration: 220}, {name: 'Anant Kotindu', duration: 310}, {name: 'Nirvikalp Uttam Ati', duration: 175}, {name: 'Krupa Karo', duration: 320}]
       },
       {
         name: 'Thal',
-        songs: [{name: 'Jamone Jamadu Re', duration: 280}, {name: 'Mare Gher Aavjo Chogladhari', duration: 155}, {name: 'Avinashi Avo Re', duration: 600}]
+        songs: [{name: 'Jamone Jamadu Re', duration: 380}, {name: 'Mare Gher Aavjo Chogladhari', duration: 155}, {name: 'Avinashi Avo Re', duration: 1600}]
       },
       {
         name: 'Chesta',
-        songs: [{name: 'Pratham Shr Hari Ne', duration: 1000}, {name: 'Ora Avo Shyam Snehi', duration: 320}, {name: 'Podho Podho Sahjanand Swami', duration: 190}, {name: 'Mitha Vhala Kem Visaru', duration: 145}, {name: 'Akshar Na Vasi Vhalo', duration: 460}]
+        songs: [{name: 'Pratham Shr Hari Ne', duration: 1000}, {name: 'Ora Avo Shyam Snehi', duration: 1820}, {name: 'Podho Podho Sahjanand Swami', duration: 290}, {name: 'Mitha Vhala Kem Visaru', duration: 245}, {name: 'Akshar Na Vasi Vhalo', duration: 460}]
       }
     ]
   }
@@ -39,7 +39,6 @@ class HoursCounter extends Component {
   render() {
     let allSongs = this.props.playlists.reduce((songs, eachPlaylist) => songs.concat(eachPlaylist.songs), []);
     let totalDuration = allSongs.reduce((sum, eachSong) => sum += eachSong.duration, 0)
-
     return (
       <div style={{display: 'inline-block', width: '40%'}}>
         <h2>{Math.floor(totalDuration/3600)} hours</h2>
@@ -61,14 +60,13 @@ class Filter extends Component {
 
 class Playlist extends Component {
   render() {
+    let playlist = this.props.playlist;
     return (
       <div style={{width: '25%', display: 'inline-block'}}>
         <img />
-        <h3>Playlist Name</h3>
+        <h3>{playlist.name}</h3>
         <ul>
-          <li>Song 1</li>
-          <li>Song 2</li>
-          <li>Song 3</li>
+          {playlist.songs.map(song => <li>{song.name}</li>)}
         </ul>
       </div>
     );
@@ -98,10 +96,7 @@ class App extends Component {
           <PlaylistCounter playlists={this.state.serverData.user.playlists} />
           <HoursCounter playlists={this.state.serverData.user.playlists} />
           <Filter />
-          <Playlist />
-          <Playlist />
-          <Playlist />
-          <Playlist />
+          {this.state.serverData.user.playlists.map(playlist => <Playlist playlist={playlist} />)}
         </div> : <h1>Loading.....</h1>}
       </div>
     )
