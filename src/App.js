@@ -39,9 +39,11 @@ class HoursCounter extends Component {
   render() {
     let allSongs = this.props.playlists.reduce((songs, eachPlaylist) => songs.concat(eachPlaylist.songs), []);
     let totalDuration = allSongs.reduce((sum, eachSong) => sum += eachSong.duration, 0)
+    let hours = Math.floor(totalDuration/3600);
+
     return (
       <div style={{display: 'inline-block', width: '40%'}}>
-        <h2>{Math.floor(totalDuration/3600)} hours</h2>
+        <h2>{hours} hours, {Math.floor(totalDuration/60 - (hours*60)) + ' minutes'}</h2>
       </div>
     )
   }
@@ -91,6 +93,11 @@ class App extends Component {
   }
 
   render() {
+    let playlistsToRender = this.state.serverData.user? this.state.serverData.user.playlists
+      .filter(
+        playlist => playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())
+      ) : [];
+      
     return (
       <div className="App">
         {this.state.serverData.user ?
@@ -98,12 +105,10 @@ class App extends Component {
           <h1>
               {this.state.serverData.user.name}'s Playlist
           </h1>
-          <PlaylistCounter playlists={this.state.serverData.user.playlists} />
-          <HoursCounter playlists={this.state.serverData.user.playlists} />
+          <PlaylistCounter playlists={playlistsToRender} />
+          <HoursCounter playlists={playlistsToRender} />
           <Filter onTextChange={text => this.setState({filterString: text})} />
-          {this.state.serverData.user.playlists.filter(
-            playlist => playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())
-          ).map(playlist => 
+          {playlistsToRender.map(playlist => 
             <Playlist playlist={playlist} />)}
         </div> : <h1>Loading.....</h1>}
       </div>
