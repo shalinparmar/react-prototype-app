@@ -67,6 +67,13 @@ class App extends Component {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
 
+    if (!accessToken)
+    {
+      console.log(accessToken);
+      return;
+    }
+      
+
     fetch('https://api.spotify.com/v1/me', { headers: { 'Authorization': 'Bearer ' + accessToken } })
       .then(response => response.json())
       .then(data => this.setState({ user: { name: data.display_name } }));
@@ -89,7 +96,7 @@ class App extends Component {
       
     return (
       <div className="App">
-        {this.state && this.state.user 
+        {this.state.user && this.state.user.name
         ?<div>
           <h1>
               {this.state.user.name}'s Playlist
